@@ -1,0 +1,7 @@
+[
+  { "id": "2048", "name": "2048", "url": "https://gabrielecirulli.github.io/2048/" },
+  { "id": "hextris", "name": "Hextris", "url": "https://hextris.io/" },
+  { "id": "0hh1", "name": "0hh1", "url": "https://0hh1.com/" },
+  { "id": "blockrain", "name": "Blockrain Tetris", "url": "https://pizza3.github.io/react-tetris/" },
+  { "id": "sudoku", "name": "Sudoku", "url": "https://sudoku.com/" }
+]

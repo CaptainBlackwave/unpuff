@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { theme } from '../theme/theme';
 import { useUserData } from '../hooks/useUserData';
@@ -7,7 +7,9 @@ import { useStreak } from '../hooks/useStreak';
 import { SOSButton } from '../components/SOSButton';
 import { InterventionModal } from '../components/InterventionModal';
 import { TriggerPicker } from '../components/TriggerPicker';
+import { GameTheatre } from '../components/GameTheatre';
 import { Tip, TriggerType } from '../types';
+import gamesData from '../data/games.json';
 
 export const SOSScreen: React.FC = () => {
   const { userData, getRandomTip, getTriggerTip, getValidation, getHype, logCraving, addExperience, getMorningWisdom } = useUserData();
@@ -18,6 +20,14 @@ export const SOSScreen: React.FC = () => {
   const [validationText, setValidationText] = useState('');
   const [hypeText, setHypeText] = useState('');
   const [currentTrigger, setCurrentTrigger] = useState<TriggerType | undefined>();
+  const [gameVisible, setGameVisible] = useState(false);
+  const [currentGame, setCurrentGame] = useState<{ id: string; name: string; url: string } | null>(null);
+
+  const getRandomGame = () => {
+    const games = gamesData as { id: string; name: string; url: string }[];
+    const randomIndex = Math.floor(Math.random() * games.length);
+    return games[randomIndex];
+  };
 
   const handleSOSPress = () => {
     setTriggerPickerVisible(true);
@@ -56,6 +66,21 @@ export const SOSScreen: React.FC = () => {
     setCurrentTrigger(undefined);
   };
 
+  const handlePlayGame = () => {
+    const game = getRandomGame();
+    setCurrentGame(game);
+    setModalVisible(false);
+    setGameVisible(true);
+  };
+
+  const handleGameComplete = async () => {
+    await logCraving(currentTip, currentTrigger);
+    await addExperience(25);
+    setGameVisible(false);
+    setCurrentTrigger(undefined);
+    setCurrentGame(null);
+  };
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView 
@@ -87,6 +112,17 @@ export const SOSScreen: React.FC = () => {
         </View>
         
         <SOSButton onPress={handleSOSPress} />
+
+        <TouchableOpacity
+          style={styles.gameButton}
+          onPress={() => {
+            const game = getRandomGame();
+            setCurrentGame(game);
+            setGameVisible(true);
+          }}
+        >
+          <Text style={styles.gameButtonText}>🎮 Distract Me</Text>
+        </TouchableOpacity>
         
         <View style={styles.reminderSection}>
           <Text style={styles.reminderText}>
@@ -111,6 +147,15 @@ export const SOSScreen: React.FC = () => {
         motivationImageUri={userData.motivationImageUri}
         personalMantra={userData.personalMantra}
       />
+      
+      {currentGame && (
+        <GameTheatre
+          visible={gameVisible}
+          game={currentGame}
+          onClose={() => setGameVisible(false)}
+          onComplete={handleGameComplete}
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -160,6 +205,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: theme.colors.textSecondary,
     lineHeight: 22,
+  },
+  gameButton: {
+    backgroundColor: theme.colors.secondary,
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.xl,
+    borderRadius: theme.borderRadius.md,
+    marginTop: theme.spacing.md,
+    ...theme.shadows.md,
+  },
+  gameButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600',
   },
   reminderSection: {
     padding: theme.spacing.lg,
