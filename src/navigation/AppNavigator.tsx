@@ -6,6 +6,7 @@ import { DashboardScreen } from '../screens/DashboardScreen';
 import { SOSScreen } from '../screens/SOSScreen';
 import { TipsScreen } from '../screens/TipsScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
+import { CircleScreen } from '../screens/CircleScreen';
 import { theme } from '../theme/theme';
 
 const Tab = createBottomTabNavigator();
@@ -15,6 +16,7 @@ const TabIcon: React.FC<{ name: string; focused: boolean }> = ({ name, focused }
     switch (name) {
       case 'Dashboard': return '🔥';
       case 'SOS': return '🆘';
+      case 'Circle': return '👥';
       case 'Tips': return '💡';
       case 'Settings': return '⚙️';
       default: return '•';
@@ -43,6 +45,7 @@ export const AppNavigator: React.FC = () => {
       >
         <Tab.Screen name="Dashboard" component={DashboardScreen} />
         <Tab.Screen name="SOS" component={SOSScreen} />
+        <Tab.Screen name="Circle" component={CircleScreen} />
         <Tab.Screen name="Tips" component={TipsScreen} />
         <Tab.Screen name="Settings" component={SettingsScreen} />
       </Tab.Navigator>

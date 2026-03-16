@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { UserData, CravingEvent, TriggerType, TriggerStats } from '../types';
+import { UserData, CravingEvent, TriggerType, TriggerStats, CircleData } from '../types';
 
 const STORAGE_KEYS = {
   USER_DATA: '@breathebase_user_data',
@@ -136,6 +136,72 @@ export const getPeakCravingHours = async (): Promise<number[]> => {
 
 export const resetProgress = async (): Promise<void> => {
   await saveUserData(DEFAULT_USER_DATA);
+};
+
+const CIRCLE_KEY = '@breathebase_circle';
+
+export const getCircleData = async (): Promise<CircleData | null> => {
+  try {
+    const jsonValue = await AsyncStorage.getItem(CIRCLE_KEY);
+    if (jsonValue !== null) {
+      return JSON.parse(jsonValue) as CircleData;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error reading circle data:', error);
+    return null;
+  }
+};
+
+export const saveCircleData = async (data: CircleData): Promise<void> => {
+  try {
+    const jsonValue = JSON.stringify(data);
+    await AsyncStorage.setItem(CIRCLE_KEY, jsonValue);
+  } catch (error) {
+    console.error('Error saving circle data:', error);
+  }
+};
+
+export const linkPartner = async (partnerId: string, partnerName: string): Promise<void> => {
+  const circleData: CircleData = {
+    partnerId,
+    partnerName,
+    linkedAt: new Date().toISOString(),
+  };
+  await saveCircleData(circleData);
+};
+
+export const unlinkPartner = async (): Promise<void> => {
+  await saveCircleData({});
+};
+
+export const notifyPartnerSOS = async (): Promise<void> => {
+  const circleData = await getCircleData();
+  if (circleData && circleData.partnerId) {
+    circleData.lastPartnerSOS = new Date().toISOString();
+    await saveCircleData(circleData);
+  }
+};
+
+export const getCombinedStats = async (): Promise<{
+  combinedDays: number;
+  combinedMoney: number;
+  combinedCravings: number;
+}> => {
+  const userData = await getUserData();
+  const circleData = await getCircleData();
+  
+  const userDays = Math.floor((Date.now() - new Date(userData.quitDate).getTime()) / (1000 * 60 * 60 * 24));
+  const partnerDays = circleData?.partnerId ? Math.floor((Date.now() - 30 * 24 * 60 * 60 * 1000) / (1000 * 60 * 60 * 24)) : 0;
+  
+  const userMoney = userDays * userData.moneySavedPerDay;
+  const partnerMoney = partnerDays * 8;
+  
+  return {
+    combinedDays: userDays + partnerDays,
+    combinedMoney: userMoney + partnerMoney,
+    combinedCravings: userData.totalCravingsResisted + (circleData?.partnerId ? 15 : 0),
+  };
 };
 
 export { DEFAULT_USER_DATA };

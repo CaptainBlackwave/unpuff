@@ -79,3 +79,37 @@ export interface Badge {
   requirement: number;
   type: 'days' | 'money' | 'cravings';
 }
+
+export interface CircleMember {
+  id: string;
+  name: string;
+  quitDate: string;
+  streakDays: number;
+  cravingsResisted: number;
+  lastActive: string;
+}
+
+export interface CircleData {
+  partnerId?: string;
+  partnerName?: string;
+  linkedAt?: string;
+  lastPartnerSOS?: string;
+}
+
+export interface SharedMilestone {
+  id: string;
+  title: string;
+  description: string;
+  requirement: number;
+  type: 'combinedDays' | 'combinedMoney' | 'combinedCravings';
+  achieved: boolean;
+}
+
+export const SHARED_MILESTONES: SharedMilestone[] = [
+  { id: '1', title: 'First Steps', description: '7 days combined', requirement: 7, type: 'combinedDays', achieved: false },
+  { id: '2', title: 'Team Spirit', description: '30 days combined', requirement: 30, type: 'combinedDays', achieved: false },
+  { id: '3', title: 'Power Couple', description: '100 days combined', requirement: 100, type: 'combinedDays', achieved: false },
+  { id: '4', title: 'Savings Boost', description: '$500 combined saved', requirement: 500, type: 'combinedMoney', achieved: false },
+  { id: '5', title: 'Money Masters', description: '$1,000 combined saved', requirement: 1000, type: 'combinedMoney', achieved: false },
+  { id: '6', title: 'Unstoppable', description: '50 cravings resisted together', requirement: 50, type: 'combinedCravings', achieved: false },
+];
