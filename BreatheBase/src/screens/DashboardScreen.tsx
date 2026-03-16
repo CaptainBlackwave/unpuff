@@ -35,7 +35,7 @@ export const DashboardScreen: React.FC = () => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <Text style={styles.title}>BreatheBase</Text>
+        <Text style={styles.title}>Unpuff</Text>
         
         <View style={styles.ringContainer}>
           <StreakRing
