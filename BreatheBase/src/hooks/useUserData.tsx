@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { UserData, Tip, CravingEvent, TipCategory, TriggerType, TriggerStats } from '../types';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { UserData, Tip, TipCategory, TriggerType, TriggerStats } from '../types';
 import { 
   getUserData, 
   saveUserData, 
@@ -15,7 +15,29 @@ import {
 } from '../utils/storage';
 import tipsData from '../data/tips.json';
 
-export const useUserData = () => {
+interface UserDataContextType {
+  userData: UserData;
+  isLoading: boolean;
+  updateDate: (newDate: string) => Promise<void>;
+  updateCost: (cost: number) => Promise<void>;
+  addExperience: (amount: number) => Promise<{ newXP: number; leveledUp: boolean }>;
+  logCraving: (tip: Tip, trigger?: TriggerType) => Promise<void>;
+  reset: () => Promise<void>;
+  refresh: () => Promise<void>;
+  getRandomTip: (category?: string) => Tip;
+  getTriggerTip: (trigger: TriggerType) => string;
+  getMorningWisdom: () => string;
+  getValidation: () => string;
+  getHype: (days: number, money: number) => string;
+  getTodayCravingsResisted: () => number;
+  getTriggerStats: () => Promise<TriggerStats[]>;
+  getHeatMapData: () => Promise<number[]>;
+  getPeakCravingHours: () => Promise<number[]>;
+}
+
+const UserDataContext = createContext<UserDataContextType | undefined>(undefined);
+
+export const UserDataProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [userData, setUserData] = useState<UserData>(DEFAULT_USER_DATA);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -105,23 +127,55 @@ export const useUserData = () => {
     ).length;
   }, [userData.cravingsHistory]);
 
-  return {
-    userData,
-    isLoading,
-    updateDate,
-    updateCost,
-    addExperience,
-    logCraving,
-    reset,
-    refresh: loadUserData,
-    getRandomTip,
-    getTriggerTip,
-    getMorningWisdom,
-    getValidation,
-    getHype,
-    getTodayCravingsResisted,
-    getTriggerStats,
-    getHeatMapData,
-    getPeakCravingHours,
-  };
+  return (
+    <UserDataContext.Provider
+      value={{
+        userData,
+        isLoading,
+        updateDate,
+        updateCost,
+        addExperience,
+        logCraving,
+        reset,
+        refresh: loadUserData,
+        getRandomTip,
+        getTriggerTip,
+        getMorningWisdom,
+        getValidation,
+        getHype,
+        getTodayCravingsResisted,
+        getTriggerStats,
+        getHeatMapData,
+        getPeakCravingHours,
+      }}
+    >
+      {children}
+    </UserDataContext.Provider>
+  );
+};
+
+export const useUserData = (): UserDataContextType => {
+  const context = useContext(UserDataContext);
+  if (!context) {
+    return {
+      userData: DEFAULT_USER_DATA,
+      isLoading: true,
+      updateDate: async () => {},
+      updateCost: async () => {},
+      addExperience: async () => ({ newXP: 0, leveledUp: false }),
+      logCraving: async () => {},
+      reset: async () => {},
+      refresh: async () => {},
+      getRandomTip: () => ({ id: '', category: 'Physical', title: '', content: '' }),
+      getTriggerTip: () => '',
+      getMorningWisdom: () => '',
+      getValidation: () => '',
+      getHype: () => '',
+      getTodayCravingsResisted: () => 0,
+      getTriggerStats: async () => [],
+      getHeatMapData: async () => [],
+      getPeakCravingHours: async () => [],
+    };
+  }
+  return context;
 };

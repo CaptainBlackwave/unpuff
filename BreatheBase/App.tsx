@@ -4,6 +4,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as Linking from 'expo-linking';
 import { AppNavigator } from './src/navigation/AppNavigator';
 import { AccessibilityProvider } from './src/hooks/useAccessibility';
+import { UserDataProvider } from './src/hooks/useUserData';
 
 const prefix = Linking.createURL('/');
 
@@ -32,8 +33,10 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <AccessibilityProvider>
-        <StatusBar style="dark" />
-        <AppNavigator />
+        <UserDataProvider>
+          <StatusBar style="dark" />
+          <AppNavigator />
+        </UserDataProvider>
       </AccessibilityProvider>
     </SafeAreaProvider>
   );
