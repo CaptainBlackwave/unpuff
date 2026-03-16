@@ -78,7 +78,7 @@ When a craving hits, tap the SOS button for instant support:
 git clone https://github.com/CaptainBlackwave/unpuff.git
 cd unpuff
 
-# Install dependencies
+# Install dependencies (includes web support)
 npm install
 
 # Start the development server
@@ -87,13 +87,13 @@ npx expo start
 
 ### Running the App
 
-#### Development (Expo Go)
+#### Development (Expo Go on mobile)
 ```bash
 npx expo start
 # Scan QR code with Expo Go on your phone
 ```
 
-#### Web
+#### Web Browser
 ```bash
 npx expo start --web
 ```

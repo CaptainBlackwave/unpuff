@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { theme } from '../theme/theme';
 import { useStreak } from '../hooks/useStreak';
 import { useUserData } from '../hooks/useUserData';
@@ -9,13 +11,20 @@ import { XPDisplay } from '../components/XPDisplay';
 import { MoneySaved } from '../components/MoneySaved';
 import { HealthMilestones } from '../components/HealthMilestones';
 import { TriggerHeatMap } from '../components/TriggerHeatMap';
+import { ForgivenessModal } from '../components/ForgivenessModal';
 import { getHealthMilestones } from '../utils/calculations';
+import { logLapse, resetProgress } from '../utils/storage';
+import { RootStackParamList } from '../navigation/AppNavigator';
+
+type DashboardNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const DashboardScreen: React.FC = () => {
-  const { streakData, moneySaved, dayProgress, quitDate } = useStreak();
-  const { userData, getTodayCravingsResisted } = useUserData();
+  const navigation = useNavigation<DashboardNavigationProp>();
+  const { streakData, moneySaved, dayProgress, quitDate, refreshStreak } = useStreak();
+  const { userData, getTodayCravingsResisted, refresh } = useUserData();
   const [refreshing, setRefreshing] = useState(false);
   const [milestones, setMilestones] = useState(getHealthMilestones(quitDate));
+  const [showForgivenessModal, setShowForgivenessModal] = useState(false);
 
   useEffect(() => {
     setMilestones(getHealthMilestones(quitDate));
@@ -25,6 +34,22 @@ export const DashboardScreen: React.FC = () => {
     setRefreshing(true);
     setMilestones(getHealthMilestones(quitDate));
     setRefreshing(false);
+  };
+
+  const handleLogLapse = async () => {
+    await logLapse();
+    await refresh();
+    await refreshStreak();
+    setShowForgivenessModal(false);
+  };
+
+  const handleRelapse = async () => {
+    await resetProgress();
+    setShowForgivenessModal(false);
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Onboarding' }],
+    });
   };
 
   return (
@@ -60,6 +85,9 @@ export const DashboardScreen: React.FC = () => {
           <View style={styles.cravingCard}>
             <Text style={styles.cravingNumber}>{getTodayCravingsResisted()}</Text>
             <Text style={styles.cravingLabel}>Cravings Resisted Today</Text>
+            {userData.lapses > 0 && (
+              <Text style={styles.lapseText}>{userData.lapses} lapse{userData.lapses > 1 ? 's' : ''} logged</Text>
+            )}
           </View>
         </View>
         
@@ -68,7 +96,21 @@ export const DashboardScreen: React.FC = () => {
         <View style={styles.heatmapRow}>
           <TriggerHeatMap />
         </View>
+
+        <TouchableOpacity 
+          style={styles.slipButton}
+          onPress={() => setShowForgivenessModal(true)}
+        >
+          <Text style={styles.slipButtonText}>I slipped up</Text>
+        </TouchableOpacity>
       </ScrollView>
+      
+      <ForgivenessModal
+        visible={showForgivenessModal}
+        onClose={() => setShowForgivenessModal(false)}
+        onLogLapse={handleLogLapse}
+        onRelapse={handleRelapse}
+      />
     </SafeAreaView>
   );
 };
@@ -125,7 +167,23 @@ const styles = StyleSheet.create({
     color: theme.colors.textSecondary,
     marginTop: 4,
   },
+  lapseText: {
+    fontSize: 12,
+    color: theme.colors.accent,
+    marginTop: 4,
+    fontWeight: '600',
+  },
   heatmapRow: {
     marginTop: theme.spacing.md,
+  },
+  slipButton: {
+    marginTop: theme.spacing.xl,
+    alignItems: 'center',
+    padding: theme.spacing.md,
+  },
+  slipButtonText: {
+    fontSize: 14,
+    color: theme.colors.textSecondary,
+    textDecorationLine: 'underline',
   },
 });

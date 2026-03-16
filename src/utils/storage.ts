@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { UserData, CravingEvent, TriggerType, TriggerStats, CircleData } from '../types';
+import { UserData, CravingEvent, TriggerType, TriggerStats } from '../types';
 
 const STORAGE_KEYS = {
   USER_DATA: '@breathebase_user_data',
@@ -12,6 +12,8 @@ const DEFAULT_USER_DATA: UserData = {
   xp: 0,
   level: 1,
   cravingsHistory: [],
+  lapses: 0,
+  lapseDates: [],
 };
 
 export const getUserData = async (): Promise<UserData> => {
@@ -134,74 +136,29 @@ export const getPeakCravingHours = async (): Promise<number[]> => {
     .map(item => item.hour);
 };
 
+export const logLapse = async (): Promise<{ xpPenalty: number; moneyPenalty: number }> => {
+  const userData = await getUserData();
+  
+  const cigaretteCost = userData.moneySavedPerDay / 20;
+  const xpPenalty = 50;
+  const moneyPenalty = cigaretteCost;
+  
+  userData.lapses = (userData.lapses || 0) + 1;
+  userData.lapseDates = userData.lapseDates || [];
+  userData.lapseDates.push(new Date().toISOString());
+  
+  userData.xp = Math.max(0, (userData.xp || 0) - xpPenalty);
+  
+  const newLevel = Math.floor(userData.xp / 500) + 1;
+  userData.level = newLevel;
+  
+  await saveUserData(userData);
+  
+  return { xpPenalty, moneyPenalty };
+};
+
 export const resetProgress = async (): Promise<void> => {
   await saveUserData(DEFAULT_USER_DATA);
-};
-
-const CIRCLE_KEY = '@breathebase_circle';
-
-export const getCircleData = async (): Promise<CircleData | null> => {
-  try {
-    const jsonValue = await AsyncStorage.getItem(CIRCLE_KEY);
-    if (jsonValue !== null) {
-      return JSON.parse(jsonValue) as CircleData;
-    }
-    return null;
-  } catch (error) {
-    console.error('Error reading circle data:', error);
-    return null;
-  }
-};
-
-export const saveCircleData = async (data: CircleData): Promise<void> => {
-  try {
-    const jsonValue = JSON.stringify(data);
-    await AsyncStorage.setItem(CIRCLE_KEY, jsonValue);
-  } catch (error) {
-    console.error('Error saving circle data:', error);
-  }
-};
-
-export const linkPartner = async (partnerId: string, partnerName: string): Promise<void> => {
-  const circleData: CircleData = {
-    partnerId,
-    partnerName,
-    linkedAt: new Date().toISOString(),
-  };
-  await saveCircleData(circleData);
-};
-
-export const unlinkPartner = async (): Promise<void> => {
-  await saveCircleData({});
-};
-
-export const notifyPartnerSOS = async (): Promise<void> => {
-  const circleData = await getCircleData();
-  if (circleData && circleData.partnerId) {
-    circleData.lastPartnerSOS = new Date().toISOString();
-    await saveCircleData(circleData);
-  }
-};
-
-export const getCombinedStats = async (): Promise<{
-  combinedDays: number;
-  combinedMoney: number;
-  combinedCravings: number;
-}> => {
-  const userData = await getUserData();
-  const circleData = await getCircleData();
-  
-  const userDays = Math.floor((Date.now() - new Date(userData.quitDate).getTime()) / (1000 * 60 * 60 * 24));
-  const partnerDays = circleData?.partnerId ? Math.floor((Date.now() - 30 * 24 * 60 * 60 * 1000) / (1000 * 60 * 60 * 24)) : 0;
-  
-  const userMoney = userDays * userData.moneySavedPerDay;
-  const partnerMoney = partnerDays * 8;
-  
-  return {
-    combinedDays: userDays + partnerDays,
-    combinedMoney: userMoney + partnerMoney,
-    combinedCravings: userData.totalCravingsResisted + (circleData?.partnerId ? 15 : 0),
-  };
 };
 
 export { DEFAULT_USER_DATA };

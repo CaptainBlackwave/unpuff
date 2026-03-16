@@ -54,6 +54,8 @@ export interface UserData {
   xp: number;
   level: number;
   cravingsHistory: CravingEvent[];
+  lapses: number;
+  lapseDates: string[];
 }
 
 export interface StreakData {
@@ -78,15 +80,6 @@ export interface Badge {
   icon: string;
   requirement: number;
   type: 'days' | 'money' | 'cravings';
-}
-
-export interface CircleMember {
-  id: string;
-  name: string;
-  quitDate: string;
-  streakDays: number;
-  cravingsResisted: number;
-  lastActive: string;
 }
 
 export interface CircleData {
