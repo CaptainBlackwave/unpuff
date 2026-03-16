@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { UserData, Tip, CravingEvent, TipCategory } from '../types';
+import { UserData, Tip, CravingEvent, TipCategory, TriggerType, TriggerStats } from '../types';
 import { 
   getUserData, 
   saveUserData, 
@@ -8,6 +8,9 @@ import {
   addXP, 
   recordCravingResisted,
   resetProgress,
+  getTriggerStats,
+  getHeatMapData,
+  getPeakCravingHours,
   DEFAULT_USER_DATA
 } from '../utils/storage';
 import tipsData from '../data/tips.json';
@@ -43,8 +46,8 @@ export const useUserData = () => {
     return result;
   }, [loadUserData]);
 
-  const logCraving = useCallback(async (tip: Tip) => {
-    await recordCravingResisted(tip.title, tip.category);
+  const logCraving = useCallback(async (tip: Tip, trigger?: TriggerType) => {
+    await recordCravingResisted(tip.title, tip.category, trigger);
     await loadUserData();
   }, [loadUserData]);
 
@@ -65,6 +68,18 @@ export const useUserData = () => {
     
     const randomIndex = Math.floor(Math.random() * tips.length);
     return tips[randomIndex];
+  }, []);
+
+  const getTriggerTip = useCallback((trigger: TriggerType): string => {
+    const triggerTips = tipsData.triggerTips as Record<string, string[]>;
+    const tips = triggerTips[trigger] || triggerTips['Other'] || [];
+    if (tips.length === 0) return getRandomTip().content;
+    return tips[Math.floor(Math.random() * tips.length)];
+  }, [getRandomTip]);
+
+  const getMorningWisdom = useCallback((): string => {
+    const wisdom = tipsData.morningWisdom as string[];
+    return wisdom[Math.floor(Math.random() * wisdom.length)];
   }, []);
 
   const getValidation = useCallback((): string => {
@@ -100,8 +115,13 @@ export const useUserData = () => {
     reset,
     refresh: loadUserData,
     getRandomTip,
+    getTriggerTip,
+    getMorningWisdom,
     getValidation,
     getHype,
     getTodayCravingsResisted,
+    getTriggerStats,
+    getHeatMapData,
+    getPeakCravingHours,
   };
 };

@@ -73,6 +73,59 @@
       "content": "Text someone: 'Having a craving right now, can you remind me why I'm doing this?'"
     }
   ],
+  "triggerTips": {
+    "Morning Coffee": [
+      "Try drinking coffee with your non-dominant hand. Break the muscle memory!",
+      "After finishing your coffee, immediately brush your teeth or wash your hands.",
+      "替代方案: Keep cinnamon sticks nearby to chew after coffee."
+    ],
+    "Driving": [
+      "Keep your car smoke-free: Put a Air Freshener and keep snacks nearby.",
+      "Roll down the window for fresh air when craving hits.",
+      "Play a podcast or music to keep your mind occupied."
+    ],
+    "Work Stress": [
+      "Take 5 deep breaths before reaching for a cigarette.",
+      "Step away from your desk for a 2-minute stretch break.",
+      "Keep a stress ball or fidget toy at your desk."
+    ],
+    "Social": [
+      "It's okay to step away from the crowd when craving hits.",
+      "Tell your friends you're quitting - they'll support you!",
+      "Keep your hands busy with a drink or snack."
+    ],
+    "Alcohol": [
+      "Limit alcohol in early days - it lowers impulse control.",
+      "Alternate alcoholic drinks with water or soda.",
+      "Plan your exit strategy before going to events with alcohol."
+    ],
+    "After Meal": [
+      "Immediately after eating, brush your teeth or chew gum.",
+      "Take a walk after meals instead of sitting.",
+      "Keep healthier snacks readily available."
+    ],
+    "Boredom": [
+      "Keep a list of quick activities: call a friend, stretch, organize something.",
+      "The boredom is temporary - ride the wave!",
+      "Break the routine: take a different route, try something new."
+    ],
+    "Phone Break": [
+      "When scrolling triggers cravings, put your phone down for 5 minutes.",
+      "Keep your phone away from your usual smoking spots.",
+      "Use app blockers during high-craving times."
+    ],
+    "Evening Relax": [
+      "Create a new evening routine that doesn't include smoking.",
+      "Keep yourself busy in the first 30 minutes after dinner.",
+      "Try herbal tea or a warm drink as a replacement."
+    ]
+  },
+  "morningWisdom": [
+    "Trigger Alert: If you usually smoke with coffee, try drinking it with your non-dominant hand today. Break the muscle memory!",
+    "Pro Tip: After your morning coffee, brush your teeth immediately. The fresh taste makes smoking less appealing!",
+    "💡 Smart Insight: Cravings typically last only 3-5 minutes. Set a timer and ride it out!",
+    "Today's Focus: Identify your triggers. When a craving hits, ask yourself 'What triggered this?'"
+  ],
   "validation": [
     "The craving is a wave. It peaks at 3 minutes and then it must subside. You're at the peak right now. Breathe.",
     "Cravings are your brain healing. This discomfort means your body is recovering. Feel the feeling and let it pass.",

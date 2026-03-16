@@ -8,6 +8,7 @@ import { StreakRing } from '../components/StreakRing';
 import { XPDisplay } from '../components/XPDisplay';
 import { MoneySaved } from '../components/MoneySaved';
 import { HealthMilestones } from '../components/HealthMilestones';
+import { TriggerHeatMap } from '../components/TriggerHeatMap';
 import { getHealthMilestones } from '../utils/calculations';
 
 export const DashboardScreen: React.FC = () => {
@@ -63,6 +64,10 @@ export const DashboardScreen: React.FC = () => {
         </View>
         
         <HealthMilestones milestones={milestones} />
+        
+        <View style={styles.heatmapRow}>
+          <TriggerHeatMap />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -119,5 +124,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: theme.colors.textSecondary,
     marginTop: 4,
+  },
+  heatmapRow: {
+    marginTop: theme.spacing.md,
   },
 });

@@ -6,17 +6,38 @@ import { useUserData } from '../hooks/useUserData';
 import { useStreak } from '../hooks/useStreak';
 import { SOSButton } from '../components/SOSButton';
 import { InterventionModal } from '../components/InterventionModal';
-import { Tip } from '../types';
+import { TriggerPicker } from '../components/TriggerPicker';
+import { Tip, TriggerType } from '../types';
 
 export const SOSScreen: React.FC = () => {
-  const { getRandomTip, getValidation, getHype, logCraving, addExperience } = useUserData();
+  const { getRandomTip, getTriggerTip, getValidation, getHype, logCraving, addExperience, getMorningWisdom } = useUserData();
   const { streakData, moneySaved } = useStreak();
   const [modalVisible, setModalVisible] = useState(false);
+  const [triggerPickerVisible, setTriggerPickerVisible] = useState(false);
   const [currentTip, setCurrentTip] = useState<Tip>(getRandomTip());
   const [validationText, setValidationText] = useState('');
   const [hypeText, setHypeText] = useState('');
+  const [currentTrigger, setCurrentTrigger] = useState<TriggerType | undefined>();
 
   const handleSOSPress = () => {
+    setTriggerPickerVisible(true);
+  };
+
+  const handleTriggerSelect = (trigger: TriggerType) => {
+    setCurrentTrigger(trigger);
+    const triggerTip = getTriggerTip(trigger);
+    const validation = getValidation();
+    const hype = getHype(streakData.days, moneySaved);
+    
+    const tip = getRandomTip();
+    setCurrentTip({ ...tip, content: triggerTip });
+    setValidationText(validation);
+    setHypeText(hype);
+    setTriggerPickerVisible(false);
+    setModalVisible(true);
+  };
+
+  const handleTriggerSkip = () => {
     const tip = getRandomTip();
     const validation = getValidation();
     const hype = getHype(streakData.days, moneySaved);
@@ -24,13 +45,15 @@ export const SOSScreen: React.FC = () => {
     setCurrentTip(tip);
     setValidationText(validation);
     setHypeText(hype);
+    setTriggerPickerVisible(false);
     setModalVisible(true);
   };
 
   const handleComplete = async () => {
-    await logCraving(currentTip);
+    await logCraving(currentTip, currentTrigger);
     await addExperience(10);
     setModalVisible(false);
+    setCurrentTrigger(undefined);
   };
 
   return (
@@ -56,6 +79,13 @@ export const SOSScreen: React.FC = () => {
           </View>
         </View>
         
+        <View style={styles.infoSection}>
+          <View style={styles.infoCard}>
+            <Text style={styles.infoTitle}>🌅 Morning Wisdom</Text>
+            <Text style={styles.infoText}>{getMorningWisdom()}</Text>
+          </View>
+        </View>
+        
         <SOSButton onPress={handleSOSPress} />
         
         <View style={styles.reminderSection}>
@@ -65,6 +95,12 @@ export const SOSScreen: React.FC = () => {
           </Text>
         </View>
       </ScrollView>
+      
+      <TriggerPicker
+        visible={triggerPickerVisible}
+        onSelect={handleTriggerSelect}
+        onSkip={handleTriggerSkip}
+      />
       
       <InterventionModal
         visible={modalVisible}
@@ -104,7 +140,7 @@ const styles = StyleSheet.create({
   },
   infoSection: {
     width: '100%',
-    marginBottom: theme.spacing.lg,
+    marginBottom: theme.spacing.md,
   },
   infoCard: {
     backgroundColor: theme.colors.surface,
