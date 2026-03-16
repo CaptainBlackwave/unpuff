@@ -56,6 +56,8 @@ export interface UserData {
   cravingsHistory: CravingEvent[];
   lapses: number;
   lapseDates: string[];
+  motivationImageUri: string | null;
+  personalMantra: string | null;
 }
 
 export interface StreakData {

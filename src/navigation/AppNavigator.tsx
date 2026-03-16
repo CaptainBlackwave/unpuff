@@ -9,6 +9,7 @@ import { TipsScreen } from '../screens/TipsScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import { CircleScreen } from '../screens/CircleScreen';
 import { OnboardingScreen } from '../screens/OnboardingScreen';
+import { QuitKitScreen } from '../screens/QuitKitScreen';
 import { theme } from '../theme/theme';
 import { getUserData } from '../utils/storage';
 
@@ -22,6 +23,7 @@ export type MainTabParamList = {
   SOS: undefined;
   Circle: undefined;
   Tips: undefined;
+  QuitKit: undefined;
   Settings: undefined;
 };
 
@@ -35,6 +37,7 @@ const TabIcon: React.FC<{ name: string; focused: boolean }> = ({ name, focused }
       case 'SOS': return '🆘';
       case 'Circle': return '👥';
       case 'Tips': return '💡';
+      case 'QuitKit': return '🔐';
       case 'Settings': return '⚙️';
       default: return '•';
     }
@@ -63,6 +66,7 @@ const MainTabs: React.FC = () => {
       <Tab.Screen name="SOS" component={SOSScreen} />
       <Tab.Screen name="Circle" component={CircleScreen} />
       <Tab.Screen name="Tips" component={TipsScreen} />
+      <Tab.Screen name="QuitKit" component={QuitKitScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
   );

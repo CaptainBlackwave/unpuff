@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Modal, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, StyleSheet, Modal, TouchableOpacity, Animated, Image, Dimensions } from 'react-native';
 import { theme } from '../theme/theme';
 import { Tip, TipCategory } from '../types';
+
+const { width: screenWidth } = Dimensions.get('window');
 
 interface InterventionModalProps {
   visible: boolean;
@@ -9,6 +11,8 @@ interface InterventionModalProps {
   tip: Tip;
   hype: string;
   onComplete: () => void;
+  motivationImageUri?: string | null;
+  personalMantra?: string | null;
 }
 
 export const InterventionModal: React.FC<InterventionModalProps> = ({
@@ -17,13 +21,16 @@ export const InterventionModal: React.FC<InterventionModalProps> = ({
   tip,
   hype,
   onComplete,
+  motivationImageUri,
+  personalMantra,
 }) => {
-  const [phase, setPhase] = useState<'validation' | 'tip' | 'hype'>('validation');
+  const [phase, setPhase] = useState<'personal' | 'validation' | 'tip' | 'hype'>('personal');
   const [fadeAnim] = useState(new Animated.Value(0));
+  const hasPersonalContent = motivationImageUri || personalMantra;
 
   useEffect(() => {
     if (visible) {
-      setPhase('validation');
+      setPhase(hasPersonalContent ? 'personal' : 'validation');
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 300,
@@ -32,7 +39,15 @@ export const InterventionModal: React.FC<InterventionModalProps> = ({
     } else {
       fadeAnim.setValue(0);
     }
-  }, [visible, fadeAnim]);
+  }, [visible, fadeAnim, hasPersonalContent]);
+
+  const handlePersonalOkay = async () => {
+    onComplete();
+  };
+
+  const handlePersonalNeedHelp = () => {
+    setPhase('validation');
+  };
 
   const handleNext = () => {
     if (phase === 'validation') {
@@ -46,6 +61,7 @@ export const InterventionModal: React.FC<InterventionModalProps> = ({
 
   const getPhaseColor = () => {
     switch (phase) {
+      case 'personal': return theme.colors.primary;
       case 'validation': return theme.colors.primary;
       case 'tip': return theme.colors.secondary;
       case 'hype': return theme.colors.accent;
@@ -54,6 +70,7 @@ export const InterventionModal: React.FC<InterventionModalProps> = ({
 
   const getPhaseTitle = () => {
     switch (phase) {
+      case 'personal': return 'Your Why';
       case 'validation': return 'Breathe';
       case 'tip': return tip.title;
       case 'hype': return 'Stay Strong';
@@ -62,11 +79,27 @@ export const InterventionModal: React.FC<InterventionModalProps> = ({
 
   const getContent = () => {
     switch (phase) {
+      case 'personal': return personalMantra || '';
       case 'validation': return validation;
       case 'tip': return tip.content;
       case 'hype': return hype;
     }
   };
+
+  const renderPersonalPhase = () => (
+    <View style={styles.personalContainer}>
+      {motivationImageUri && (
+        <Image 
+          source={{ uri: motivationImageUri }} 
+          style={styles.motivationImage} 
+          resizeMode="cover" 
+        />
+      )}
+      {personalMantra && (
+        <Text style={styles.mantraText}>{personalMantra}</Text>
+      )}
+    </View>
+  );
 
   return (
     <Modal
@@ -77,26 +110,47 @@ export const InterventionModal: React.FC<InterventionModalProps> = ({
     >
       <View style={styles.overlay}>
         <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
-          <View style={[styles.indicator, { backgroundColor: getPhaseColor() }]} />
-          
-          <Text style={styles.phaseTitle}>{getPhaseTitle()}</Text>
-          
-          <Text style={styles.content}>{getContent()}</Text>
-          
-          {phase === 'tip' && (
-            <View style={styles.categoryBadge}>
-              <Text style={styles.categoryText}>{tip.category}</Text>
-            </View>
+          {phase === 'personal' ? (
+            <>
+              <Text style={styles.phaseTitle}>Your Why</Text>
+              {renderPersonalPhase()}
+              <TouchableOpacity
+                style={[styles.button, { backgroundColor: theme.colors.success }]}
+                onPress={handlePersonalOkay}
+              >
+                <Text style={styles.buttonText}>I remember now. I'm okay.</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, styles.secondaryButton, { borderColor: theme.colors.primary }]}
+                onPress={handlePersonalNeedHelp}
+              >
+                <Text style={[styles.buttonText, { color: theme.colors.primary }]}>I'm still struggling. Help.</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <>
+              <View style={[styles.indicator, { backgroundColor: getPhaseColor() }]} />
+              
+              <Text style={styles.phaseTitle}>{getPhaseTitle()}</Text>
+              
+              <Text style={styles.content}>{getContent()}</Text>
+              
+              {phase === 'tip' && (
+                <View style={styles.categoryBadge}>
+                  <Text style={styles.categoryText}>{tip.category}</Text>
+                </View>
+              )}
+              
+              <TouchableOpacity
+                style={[styles.button, { backgroundColor: getPhaseColor() }]}
+                onPress={handleNext}
+              >
+                <Text style={styles.buttonText}>
+                  {phase === 'hype' ? 'I\'ve Got This' : 'Next'}
+                </Text>
+              </TouchableOpacity>
+            </>
           )}
-          
-          <TouchableOpacity
-            style={[styles.button, { backgroundColor: getPhaseColor() }]}
-            onPress={handleNext}
-          >
-            <Text style={styles.buttonText}>
-              {phase === 'hype' ? 'I\'ve Got This' : 'Next'}
-            </Text>
-          </TouchableOpacity>
         </Animated.View>
       </View>
     </Modal>
@@ -118,6 +172,25 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 350,
     alignItems: 'center',
+  },
+  personalContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: theme.spacing.lg,
+  },
+  motivationImage: {
+    width: screenWidth - 80,
+    height: screenWidth - 80,
+    borderRadius: theme.borderRadius.md,
+    marginBottom: theme.spacing.md,
+  },
+  mantraText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: theme.colors.textPrimary,
+    textAlign: 'center',
+    fontStyle: 'italic',
+    lineHeight: 26,
   },
   indicator: {
     width: 60,
@@ -156,6 +229,11 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing.md,
     borderRadius: theme.borderRadius.full,
     width: '100%',
+    marginBottom: theme.spacing.sm,
+  },
+  secondaryButton: {
+    backgroundColor: 'transparent',
+    borderWidth: 2,
   },
   buttonText: {
     color: '#fff',

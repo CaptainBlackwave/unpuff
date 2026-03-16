@@ -50,6 +50,8 @@ export const OnboardingScreen: React.FC = () => {
         cravingsHistory: [],
         lapses: 0,
         lapseDates: [],
+        motivationImageUri: null,
+        personalMantra: null,
       });
       
       navigation.reset({

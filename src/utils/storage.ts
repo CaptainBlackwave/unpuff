@@ -14,6 +14,8 @@ const DEFAULT_USER_DATA: UserData = {
   cravingsHistory: [],
   lapses: 0,
   lapseDates: [],
+  motivationImageUri: null,
+  personalMantra: null,
 };
 
 export const getUserData = async (): Promise<UserData> => {
@@ -159,6 +161,16 @@ export const logLapse = async (): Promise<{ xpPenalty: number; moneyPenalty: num
 
 export const resetProgress = async (): Promise<void> => {
   await saveUserData(DEFAULT_USER_DATA);
+};
+
+export const updateQuitKit = async (
+  motivationImageUri: string | null,
+  personalMantra: string | null
+): Promise<void> => {
+  const userData = await getUserData();
+  userData.motivationImageUri = motivationImageUri;
+  userData.personalMantra = personalMantra;
+  await saveUserData(userData);
 };
 
 export { DEFAULT_USER_DATA };

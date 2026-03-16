@@ -10,7 +10,7 @@ import { TriggerPicker } from '../components/TriggerPicker';
 import { Tip, TriggerType } from '../types';
 
 export const SOSScreen: React.FC = () => {
-  const { getRandomTip, getTriggerTip, getValidation, getHype, logCraving, addExperience, getMorningWisdom } = useUserData();
+  const { userData, getRandomTip, getTriggerTip, getValidation, getHype, logCraving, addExperience, getMorningWisdom } = useUserData();
   const { streakData, moneySaved } = useStreak();
   const [modalVisible, setModalVisible] = useState(false);
   const [triggerPickerVisible, setTriggerPickerVisible] = useState(false);
@@ -108,6 +108,8 @@ export const SOSScreen: React.FC = () => {
         tip={currentTip}
         hype={hypeText}
         onComplete={handleComplete}
+        motivationImageUri={userData.motivationImageUri}
+        personalMantra={userData.personalMantra}
       />
     </SafeAreaView>
   );
