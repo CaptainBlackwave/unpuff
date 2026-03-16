@@ -1,87 +1,62 @@
-# Active Context: Next.js Starter Template
+# Active Context: BreatheBase - Quit Smoking App
 
 ## Current State
 
-**Template Status**: ✅ Ready for development
+**Project Status**: ✅ Development Complete
 
-The template is a clean Next.js 16 starter with TypeScript and Tailwind CSS 4. It's ready for AI-assisted expansion to build any type of application.
+BreatheBase is a gamified quit-smoking app built with React Native and Expo. The app features a streak tracker, money saved calculator, SOS craving button, and health milestones.
 
 ## Recently Completed
 
-- [x] Base Next.js 16 setup with App Router
-- [x] TypeScript configuration with strict mode
-- [x] Tailwind CSS 4 integration
-- [x] ESLint configuration
-- [x] Memory bank documentation
-- [x] Recipe system for common features
+- [x] Created spec.md with complete app specification
+- [x] Initialized Expo project with React Native
+- [x] Installed dependencies (React Navigation, AsyncStorage, date-fns, react-native-svg)
+- [x] Created theme.ts with minimalist calming colors (blues/greens)
+- [x] Implemented user data schema with AsyncStorage persistence
+- [x] Created useStreak hook for real-time streak calculations
+- [x] Built Dashboard screen with circular progress ring
+- [x] Implemented money saved tracker
+- [x] Built SOS screen with intervention modal flow
+- [x] Created tips.json with categorized tips (Physical, Mental, Emergency)
+- [x] Built Health Milestones component
+- [x] Implemented XP system with level progression
+- [x] Built Settings screen with reset functionality
 
-## Current Structure
+## Project Structure
 
-| File/Directory | Purpose | Status |
-|----------------|---------|--------|
-| `src/app/page.tsx` | Home page | ✅ Ready |
-| `src/app/layout.tsx` | Root layout | ✅ Ready |
-| `src/app/globals.css` | Global styles | ✅ Ready |
-| `.kilocode/` | AI context & recipes | ✅ Ready |
+| File/Directory | Purpose |
+|----------------|---------|
+| `BreatheBase/src/theme/theme.ts` | Color palette and styling |
+| `BreatheBase/src/types/index.ts` | TypeScript interfaces |
+| `BreatheBase/src/utils/storage.ts` | AsyncStorage operations |
+| `BreatheBase/src/utils/calculations.ts` | Streak/money calculations |
+| `BreatheBase/src/hooks/useStreak.ts` | Streak tracking hook |
+| `BreatheBase/src/hooks/useUserData.ts` | User data management |
+| `BreatheBase/src/components/` | UI components |
+| `BreatheBase/src/screens/` | App screens |
+| `BreatheBase/src/navigation/` | Tab navigation |
+
+## Key Features
+
+1. **Dashboard**: Large circular progress ring showing days smoke-free, real-time money saved counter, XP/level display, cravings resisted today
+2. **SOS Button**: Pulsing emergency button that shows 3-phase intervention (Validation → Tip → Hype)
+3. **Tips Screen**: Categorized library of behavioral tips
+4. **Settings**: Daily cost input, statistics, hidden reset button
+
+## Tech Stack
+
+- React Native with Expo
+- React Navigation (Bottom Tabs)
+- AsyncStorage for persistence
+- date-fns for date calculations
+- react-native-svg for progress ring
 
 ## Current Focus
 
-The template is ready. Next steps depend on user requirements:
-
-1. What type of application to build
-2. What features are needed
-3. Design/branding preferences
-
-## Quick Start Guide
-
-### To add a new page:
-
-Create a file at `src/app/[route]/page.tsx`:
-```tsx
-export default function NewPage() {
-  return <div>New page content</div>;
-}
-```
-
-### To add components:
-
-Create `src/components/` directory and add components:
-```tsx
-// src/components/ui/Button.tsx
-export function Button({ children }: { children: React.ReactNode }) {
-  return <button className="px-4 py-2 bg-blue-600 text-white rounded">{children}</button>;
-}
-```
-
-### To add a database:
-
-Follow `.kilocode/recipes/add-database.md`
-
-### To add API routes:
-
-Create `src/app/api/[route]/route.ts`:
-```tsx
-import { NextResponse } from "next/server";
-
-export async function GET() {
-  return NextResponse.json({ message: "Hello" });
-}
-```
-
-## Available Recipes
-
-| Recipe | File | Use Case |
-|--------|------|----------|
-| Add Database | `.kilocode/recipes/add-database.md` | Data persistence with Drizzle + SQLite |
-
-## Pending Improvements
-
-- [ ] Add more recipes (auth, email, etc.)
-- [ ] Add example components
-- [ ] Add testing setup recipe
+The app is fully functional and ready for testing. TypeScript passes with no errors.
 
 ## Session History
 
 | Date | Changes |
 |------|---------|
-| Initial | Template created with base setup |
+| 2026-03-16 | Created BreatheBase Expo project with all features |

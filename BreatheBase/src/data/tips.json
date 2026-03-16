@@ -1,0 +1,88 @@
+{
+  "tips": [
+    {
+      "id": "p1",
+      "category": "Physical",
+      "title": "The Ice Trick",
+      "content": "Grab an ice cube and hold it in your hand until it melts. The cold shock resets your nervous system and breaks the craving cycle."
+    },
+    {
+      "id": "p2",
+      "category": "Physical",
+      "title": "4-7-8 Breathing",
+      "content": "Breathe in for 4 seconds, hold for 7 seconds, exhale for 8 seconds. Repeat 3 times. This activates your parasympathetic nervous system."
+    },
+    {
+      "id": "p3",
+      "category": "Physical",
+      "title": "Drink Cold Water",
+      "content": "Sip ice-cold water slowly. The sensation helps redirect your focus and the cold can suppress the urge temporarily."
+    },
+    {
+      "id": "p4",
+      "category": "Physical",
+      "title": "Quick Exercise",
+      "content": "Do 10 jumping jacks or a quick sprint in place. Physical activity releases endorphins that fight cravings."
+    },
+    {
+      "id": "m1",
+      "category": "Mental",
+      "title": "Count Backwards",
+      "content": "Start at 100 and count backwards by 7s. This requires focus and breaks the mental loop of the craving."
+    },
+    {
+      "id": "m2",
+      "category": "Mental",
+      "title": "The Wave Visualization",
+      "content": "Imagine your craving as a wave. It's high now, but waves always crash and recede. In 3 minutes, this will pass."
+    },
+    {
+      "id": "m3",
+      "category": "Mental",
+      "title": "Box Breathing",
+      "content": "Breathe in for 4 seconds, hold for 4, breathe out for 4, hold for 4. Repeat until the craving passes."
+    },
+    {
+      "id": "m4",
+      "category": "Mental",
+      "title": "Name Your Dragon",
+      "content": "Give your craving a name. 'There goes Fred again, wanting a cigarette.' Naming it reduces its power over you."
+    },
+    {
+      "id": "e1",
+      "category": "Emergency",
+      "title": "Call Your Buddy",
+      "content": "Call a friend or family member. Tell them you're having a craving. Just 5 minutes of connection can reset your brain."
+    },
+    {
+      "id": "e2",
+      "category": "Emergency",
+      "title": "Step Outside",
+      "content": "Go outside and take a 5-minute walk. Change your environment completely. Fresh air clears your mind."
+    },
+    {
+      "id": "e3",
+      "category": "Emergency",
+      "title": "Chew Gum",
+      "content": "Keep sugar-free gum handy. The oral fixation needs something to do. Chew aggressively."
+    },
+    {
+      "id": "e4",
+      "category": "Emergency",
+      "title": "Text Someone",
+      "content": "Text someone: 'Having a craving right now, can you remind me why I'm doing this?'"
+    }
+  ],
+  "validation": [
+    "The craving is a wave. It peaks at 3 minutes and then it must subside. You're at the peak right now. Breathe.",
+    "Cravings are your brain healing. This discomfort means your body is recovering. Feel the feeling and let it pass.",
+    "You're stronger than this moment. This craving will pass in just 3 minutes. You've got this.",
+    "Every craving you resist is proof that you're in control. This feeling is temporary, your freedom is forever."
+  ],
+  "hype": [
+    "If you give in now, you reset your {days}-day streak to zero. Don't let a 5-minute craving steal {days} days of work!",
+    "You're ${money} richer today because of your decision. Don't throw that away for a momentary urge.",
+    "Your lungs are healing right now. Every minute without a cigarette makes you stronger. Keep going!",
+    "Think about how proud you'll be tomorrow when you wake up still smoke-free. That's worth fighting for."
+  ]
+}

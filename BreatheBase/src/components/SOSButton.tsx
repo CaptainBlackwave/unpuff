@@ -1,0 +1,115 @@
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing } from 'react-native';
+import { theme } from '../theme/theme';
+
+interface SOSButtonProps {
+  onPress: () => void;
+}
+
+export const SOSButton: React.FC<SOSButtonProps> = ({ onPress }) => {
+  const pulseAnim = useRef(new Animated.Value(1));
+  const glowAnim = useRef(new Animated.Value(0));
+
+  useEffect(() => {
+    const pulseAnimation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim.current, {
+          toValue: 1.05,
+          duration: 1000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnim.current, {
+          toValue: 1,
+          duration: 1000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    );
+
+    const glowAnimation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(glowAnim.current, {
+          toValue: 1,
+          duration: 1500,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: false,
+        }),
+        Animated.timing(glowAnim.current, {
+          toValue: 0,
+          duration: 1500,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: false,
+        }),
+      ])
+    );
+
+    pulseAnimation.start();
+    glowAnimation.start();
+
+    return () => {
+      pulseAnimation.stop();
+      glowAnimation.stop();
+    };
+  }, [pulseAnim, glowAnim]);
+
+  const glowColor = glowAnim.current.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['rgba(230, 57, 70, 0.3)', 'rgba(230, 57, 70, 0.8)'],
+  });
+
+  return (
+    <View style={styles.container}>
+      <Animated.View 
+        style={[
+          styles.glow, 
+          { backgroundColor: glowColor, transform: [{ scale: pulseAnim.current }] }
+        ]}
+      />
+      <TouchableOpacity
+        style={styles.button}
+        onPress={onPress}
+        activeOpacity={0.8}
+      >
+        <Text style={styles.buttonText}>I&apos;m Crushing It</Text>
+        <Text style={styles.subtitleText}>Tap when a craving hits</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: theme.spacing.xl,
+  },
+  glow: {
+    position: 'absolute',
+    width: 180,
+    height: 180,
+    borderRadius: 90,
+  },
+  button: {
+    width: 160,
+    height: 160,
+    borderRadius: 80,
+    backgroundColor: theme.colors.danger,
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...theme.shadows.lg,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  subtitleText: {
+    color: 'rgba(255, 255, 255, 0.8)',
+    fontSize: 12,
+    marginTop: 4,
+    textAlign: 'center',
+  },
+});
