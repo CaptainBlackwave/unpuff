@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert, Switch } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { theme } from '../theme/theme';
 import { useUserData } from '../hooks/useUserData';
 import { useStreak } from '../hooks/useStreak';
+import { useAccessibility } from '../hooks/useAccessibility';
 
 export const SettingsScreen: React.FC = () => {
   const { userData, updateDate, updateCost, reset } = useUserData();
   const { quitDate } = useStreak();
+  const { settings, updateSetting } = useAccessibility();
   const [costInput, setCostInput] = useState(userData.moneySavedPerDay.toString());
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
@@ -54,6 +56,9 @@ export const SettingsScreen: React.FC = () => {
     });
   };
 
+  const fontScaleOptions: ('normal' | 'large' | 'extraLarge')[] = ['normal', 'large', 'extraLarge'];
+  const fontScaleLabels = { normal: 'Normal', large: 'Large', extraLarge: 'Extra Large' };
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
@@ -88,6 +93,83 @@ export const SettingsScreen: React.FC = () => {
             <TouchableOpacity style={styles.saveButton} onPress={handleSaveCost}>
               <Text style={styles.saveButtonText}>Save</Text>
             </TouchableOpacity>
+          </View>
+        </View>
+        
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Accessibility</Text>
+          <View style={styles.card}>
+            <View style={styles.settingRow}>
+              <View style={styles.settingInfo}>
+                <Text style={styles.settingLabel}>High Contrast Mode</Text>
+                <Text style={styles.settingDesc}>Enhanced visibility for visual clarity</Text>
+              </View>
+              <Switch
+                value={settings.highContrast}
+                onValueChange={(value) => updateSetting('highContrast', value)}
+                trackColor={{ false: '#ddd', true: theme.colors.primary }}
+              />
+            </View>
+            
+            <View style={styles.settingRow}>
+              <View style={styles.settingInfo}>
+                <Text style={styles.settingLabel}>Haptic Feedback</Text>
+                <Text style={styles.settingDesc}>Heartbeat vibration on SOS button</Text>
+              </View>
+              <Switch
+                value={settings.hapticFeedback}
+                onValueChange={(value) => updateSetting('hapticFeedback', value)}
+                trackColor={{ false: '#ddd', true: theme.colors.primary }}
+              />
+            </View>
+            
+            <View style={styles.settingRow}>
+              <View style={styles.settingInfo}>
+                <Text style={styles.settingLabel}>Reduced Motion</Text>
+                <Text style={styles.settingDesc}>Minimize animations</Text>
+              </View>
+              <Switch
+                value={settings.reducedMotion}
+                onValueChange={(value) => updateSetting('reducedMotion', value)}
+                trackColor={{ false: '#ddd', true: theme.colors.primary }}
+              />
+            </View>
+            
+            <View style={styles.fontScaleSection}>
+              <Text style={styles.settingLabel}>Text Size</Text>
+              <View style={styles.fontScaleOptions}>
+                {fontScaleOptions.map((option) => (
+                  <TouchableOpacity
+                    key={option}
+                    style={[
+                      styles.fontScaleButton,
+                      settings.fontScale === option && styles.fontScaleButtonActive,
+                    ]}
+                    onPress={() => updateSetting('fontScale', option)}
+                  >
+                    <Text
+                      style={[
+                        styles.fontScaleText,
+                        settings.fontScale === option && styles.fontScaleTextActive,
+                      ]}
+                    >
+                      {fontScaleLabels[option]}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          </View>
+        </View>
+        
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Voice Activation</Text>
+          <View style={styles.card}>
+            <Text style={styles.voiceInfo}>
+              You can trigger the SOS mode hands-free using:{'\n'}
+            </Text>
+            <Text style={styles.voiceCommand}>Hey Siri, "I'm having a craving in Unpuff"</Text>
+            <Text style={styles.voiceCommand}>Or open: unpuff://sos</Text>
           </View>
         </View>
         
@@ -216,6 +298,66 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  settingRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: theme.spacing.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.background,
+  },
+  settingInfo: {
+    flex: 1,
+    marginRight: theme.spacing.md,
+  },
+  settingLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: theme.colors.textPrimary,
+  },
+  settingDesc: {
+    fontSize: 12,
+    color: theme.colors.textSecondary,
+    marginTop: 2,
+  },
+  fontScaleSection: {
+    paddingTop: theme.spacing.md,
+  },
+  fontScaleOptions: {
+    flexDirection: 'row',
+    gap: theme.spacing.sm,
+    marginTop: theme.spacing.sm,
+  },
+  fontScaleButton: {
+    flex: 1,
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
+    borderRadius: theme.borderRadius.sm,
+    backgroundColor: theme.colors.background,
+    alignItems: 'center',
+  },
+  fontScaleButtonActive: {
+    backgroundColor: theme.colors.primary,
+  },
+  fontScaleText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: theme.colors.textSecondary,
+  },
+  fontScaleTextActive: {
+    color: '#fff',
+  },
+  voiceInfo: {
+    fontSize: 14,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing.sm,
+  },
+  voiceCommand: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: theme.colors.primary,
+    marginBottom: theme.spacing.xs,
   },
   statRow: {
     flexDirection: 'row',

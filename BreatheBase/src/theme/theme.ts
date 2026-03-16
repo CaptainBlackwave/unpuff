@@ -1,4 +1,6 @@
-export const theme = {
+import { getScaledFontSize } from '../hooks/useAccessibility';
+
+export const baseTheme = {
   colors: {
     primary: '#2D7DD2',
     secondary: '#45B69C',
@@ -11,6 +13,19 @@ export const theme = {
     success: '#2ECC71',
     streak: '#2D7DD2',
     streakFill: '#2ECC71',
+  },
+  highContrast: {
+    primary: '#0066CC',
+    secondary: '#008000',
+    accent: '#FF8C00',
+    background: '#FFFFFF',
+    surface: '#F5F5F5',
+    textPrimary: '#000000',
+    textSecondary: '#333333',
+    danger: '#CC0000',
+    success: '#008000',
+    streak: '#0066CC',
+    streakFill: '#008000',
   },
   spacing: {
     xs: 4,
@@ -25,32 +40,6 @@ export const theme = {
     md: 16,
     lg: 24,
     full: 9999,
-  },
-  typography: {
-    h1: {
-      fontSize: 32,
-      fontWeight: '700' as const,
-    },
-    h2: {
-      fontSize: 24,
-      fontWeight: '600' as const,
-    },
-    h3: {
-      fontSize: 20,
-      fontWeight: '600' as const,
-    },
-    body: {
-      fontSize: 16,
-      fontWeight: '400' as const,
-    },
-    caption: {
-      fontSize: 14,
-      fontWeight: '400' as const,
-    },
-    xp: {
-      fontSize: 20,
-      fontWeight: '700' as const,
-    },
   },
   shadows: {
     sm: {
@@ -77,4 +66,46 @@ export const theme = {
   },
 };
 
+export const getTypography = (fontScale: 'normal' | 'large' | 'extraLarge') => ({
+  h1: {
+    fontSize: getScaledFontSize(32, fontScale),
+    fontWeight: '700' as const,
+  },
+  h2: {
+    fontSize: getScaledFontSize(24, fontScale),
+    fontWeight: '600' as const,
+  },
+  h3: {
+    fontSize: getScaledFontSize(20, fontScale),
+    fontWeight: '600' as const,
+  },
+  body: {
+    fontSize: getScaledFontSize(16, fontScale),
+    fontWeight: '400' as const,
+  },
+  caption: {
+    fontSize: getScaledFontSize(14, fontScale),
+    fontWeight: '400' as const,
+  },
+  xp: {
+    fontSize: getScaledFontSize(20, fontScale),
+    fontWeight: '700' as const,
+  },
+});
+
+export const createTheme = (highContrast: boolean, fontScale: 'normal' | 'large' | 'extraLarge') => {
+  const colors = highContrast ? baseTheme.highContrast : baseTheme.colors;
+  const typography = getTypography(fontScale);
+  
+  return {
+    colors,
+    highContrast: baseTheme.highContrast,
+    spacing: baseTheme.spacing,
+    borderRadius: baseTheme.borderRadius,
+    typography,
+    shadows: baseTheme.shadows,
+  };
+};
+
+export const theme = baseTheme;
 export type Theme = typeof theme;

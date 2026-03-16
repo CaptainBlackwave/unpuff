@@ -1,12 +1,22 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import { theme } from '../theme/theme';
 
 interface SOSButtonProps {
   onPress: () => void;
+  hapticEnabled?: boolean;
 }
 
-export const SOSButton: React.FC<SOSButtonProps> = ({ onPress }) => {
+const triggerHeartbeatHaptic = async () => {
+  await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+  await new Promise(resolve => setTimeout(resolve, 150));
+  await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+  await new Promise(resolve => setTimeout(resolve, 150));
+  await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+};
+
+export const SOSButton: React.FC<SOSButtonProps> = ({ onPress, hapticEnabled = true }) => {
   const pulseAnim = useRef(new Animated.Value(1));
   const glowAnim = useRef(new Animated.Value(0));
 
@@ -54,6 +64,13 @@ export const SOSButton: React.FC<SOSButtonProps> = ({ onPress }) => {
     };
   }, [pulseAnim, glowAnim]);
 
+  const handlePress = useCallback(async () => {
+    if (hapticEnabled) {
+      await triggerHeartbeatHaptic();
+    }
+    onPress();
+  }, [hapticEnabled, onPress]);
+
   const glowColor = glowAnim.current.interpolate({
     inputRange: [0, 1],
     outputRange: ['rgba(230, 57, 70, 0.3)', 'rgba(230, 57, 70, 0.8)'],
@@ -69,10 +86,13 @@ export const SOSButton: React.FC<SOSButtonProps> = ({ onPress }) => {
       />
       <TouchableOpacity
         style={styles.button}
-        onPress={onPress}
+        onPress={handlePress}
         activeOpacity={0.8}
+        accessibilityLabel="SOS - I'm having a craving"
+        accessibilityHint="Press to get help with your craving"
+        accessibilityRole="button"
       >
-        <Text style={styles.buttonText}>I&apos;m Crushing It</Text>
+        <Text style={styles.buttonText}>I'm Crushing It</Text>
         <Text style={styles.subtitleText}>Tap when a craving hits</Text>
       </TouchableOpacity>
     </View>
