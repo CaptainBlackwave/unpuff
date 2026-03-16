@@ -13,6 +13,7 @@ import {
   getPeakCravingHours,
   DEFAULT_USER_DATA
 } from '../utils/storage';
+import { syncWidgetData } from '../utils/widgetSync';
 import tipsData from '../data/tips.json';
 
 interface UserDataContextType {
@@ -45,6 +46,7 @@ export const UserDataProvider: React.FC<{ children: ReactNode }> = ({ children }
     setIsLoading(true);
     const data = await getUserData();
     setUserData(data);
+    syncWidgetData(data.quitDate, data.moneySavedPerDay);
     setIsLoading(false);
   }, []);
 
