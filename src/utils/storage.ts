@@ -16,6 +16,7 @@ const DEFAULT_USER_DATA: UserData = {
   lapseDates: [],
   motivationImageUri: null,
   personalMantra: null,
+  sharedMilestones: [],
 };
 
 export const getUserData = async (): Promise<UserData> => {
@@ -171,6 +172,17 @@ export const updateQuitKit = async (
   userData.motivationImageUri = motivationImageUri;
   userData.personalMantra = personalMantra;
   await saveUserData(userData);
+};
+
+export const markMilestoneShared = async (days: number): Promise<void> => {
+  const userData = await getUserData();
+  if (!userData.sharedMilestones) {
+    userData.sharedMilestones = [];
+  }
+  if (!userData.sharedMilestones.includes(days)) {
+    userData.sharedMilestones.push(days);
+    await saveUserData(userData);
+  }
 };
 
 export { DEFAULT_USER_DATA };

@@ -58,6 +58,7 @@ export interface UserData {
   lapseDates: string[];
   motivationImageUri: string | null;
   personalMantra: string | null;
+  sharedMilestones: number[];
 }
 
 export interface StreakData {

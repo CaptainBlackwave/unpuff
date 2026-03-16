@@ -52,6 +52,7 @@ export const OnboardingScreen: React.FC = () => {
         lapseDates: [],
         motivationImageUri: null,
         personalMantra: null,
+        sharedMilestones: [],
       });
       
       navigation.reset({
