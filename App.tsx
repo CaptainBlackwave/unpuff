@@ -5,6 +5,13 @@ import * as Linking from 'expo-linking';
 import { AppNavigator } from './src/navigation/AppNavigator';
 import { AccessibilityProvider } from './src/hooks/useAccessibility';
 import { UserDataProvider } from './src/hooks/useUserData';
+import { Platform } from 'react-native';
+
+const isWeb = Platform.OS === 'web';
+
+if (isWeb) {
+  console.log('Running on web - disabling widget functionality');
+}
 
 const prefix = Linking.createURL('/');
 

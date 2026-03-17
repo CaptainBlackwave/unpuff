@@ -7,7 +7,10 @@ interface WidgetSyncInterface {
 const { WidgetSync } = NativeModules;
 
 export const syncWidgetData = (quitDate: string, moneyPerDay: number): void => {
-  if (Platform.OS === 'android' && WidgetSync) {
+  if (Platform.OS === 'web') {
+    return;
+  }
+  if ((Platform.OS === 'android' || Platform.OS === 'ios') && WidgetSync) {
     try {
       WidgetSync.syncWidgetData(quitDate, moneyPerDay);
     } catch (error) {
