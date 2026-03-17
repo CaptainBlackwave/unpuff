@@ -43,26 +43,14 @@ export const baseTheme = {
   },
   shadows: {
     sm: {
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.1,
-      shadowRadius: 2,
       elevation: 2,
       boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
     },
     md: {
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.15,
-      shadowRadius: 4,
       elevation: 4,
       boxShadow: '0 2px 4px rgba(0, 0, 0, 0.15)',
     },
     lg: {
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.2,
-      shadowRadius: 8,
       elevation: 8,
       boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
     },
