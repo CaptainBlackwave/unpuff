@@ -26,6 +26,9 @@ export const QuitKitScreen: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
 
   const requestPermission = async () => {
+    if (Platform.OS === 'web') {
+      return true;
+    }
     if (Platform.OS === 'android') {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
