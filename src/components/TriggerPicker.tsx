@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Modal, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, StyleSheet, Modal, TouchableOpacity, Animated, Platform } from 'react-native';
 import { theme } from '../theme/theme';
 import { TriggerType, TRIGGERS } from '../types';
 
@@ -21,7 +21,7 @@ export const TriggerPicker: React.FC<TriggerPickerProps> = ({
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 300,
-        useNativeDriver: true,
+        useNativeDriver: Platform.OS !== 'web',
       }).start();
     } else {
       fadeAnim.setValue(0);

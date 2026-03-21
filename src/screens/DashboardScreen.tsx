@@ -31,6 +31,7 @@ export const DashboardScreen: React.FC = () => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [currentMilestone, setCurrentMilestone] = useState<typeof MILESTONES[0] | null>(null);
   const [hasCheckedMilestones, setHasCheckedMilestones] = useState(false);
+  const [showShareableCard, setShowShareableCard] = useState(false);
   const viewShotRef = useRef<ViewShot>(null);
 
   useEffect(() => {
@@ -154,9 +155,11 @@ export const DashboardScreen: React.FC = () => {
         onRelapse={handleRelapse}
       />
 
-      <ViewShot ref={viewShotRef} options={{ format: 'png', quality: 1 }}>
-        <ShareableCard streakDays={streakData.days} moneySaved={moneySaved} />
-      </ViewShot>
+      {showShareModal && (
+        <ViewShot ref={viewShotRef} options={{ format: 'png', quality: 1 }}>
+          <ShareableCard streakDays={streakData.days} moneySaved={moneySaved} />
+        </ViewShot>
+      )}
 
       <Modal
         visible={showShareModal}

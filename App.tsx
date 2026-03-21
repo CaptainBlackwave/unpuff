@@ -7,6 +7,20 @@ import { AccessibilityProvider } from './src/hooks/useAccessibility';
 import { UserDataProvider } from './src/hooks/useUserData';
 import { Platform } from 'react-native';
 
+// Suppress specific React Native Web deprecation warnings
+const originalConsoleWarn = console.warn;
+console.warn = (...args) => {
+  const message = args[0];
+  
+  // Filter out the pointerEvents deprecation warning
+  if (typeof message === 'string' && message.includes('props.pointerEvents is deprecated')) {
+    return;
+  }
+  
+  // Call the original warn function for all other warnings
+  originalConsoleWarn(...args);
+};
+
 const isWeb = Platform.OS === 'web';
 
 if (isWeb) {
